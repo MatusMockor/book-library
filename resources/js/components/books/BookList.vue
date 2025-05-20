@@ -13,11 +13,11 @@
     <div v-if="loading" class="text-center py-4">
       <p>Loading books...</p>
     </div>
-    
+
     <div v-else-if="books.length === 0" class="text-center py-4">
       <p>No books found. Add your first book!</p>
     </div>
-    
+
     <div v-else class="overflow-x-auto">
       <table class="min-w-full bg-white">
         <thead>
@@ -70,7 +70,7 @@
     <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h3 class="text-lg font-semibold mb-4">{{ editingBook ? 'Edit Book' : 'Add Book' }}</h3>
-        
+
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">Title</label>
           <input 
@@ -81,7 +81,7 @@
           >
           <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title[0] }}</p>
         </div>
-        
+
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">Author</label>
           <select 
@@ -95,7 +95,7 @@
           </select>
           <p v-if="errors.author_id" class="text-red-500 text-sm mt-1">{{ errors.author_id[0] }}</p>
         </div>
-        
+
         <div class="mb-4">
           <label class="flex items-center">
             <input 
@@ -106,7 +106,7 @@
             <span class="text-sm font-medium">Is Borrowed</span>
           </label>
         </div>
-        
+
         <div class="flex justify-end space-x-2">
           <button 
             @click="showForm = false" 
@@ -130,7 +130,7 @@
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
         <p>Are you sure you want to delete "{{ bookToDelete?.title }}"?</p>
-        
+
         <div class="flex justify-end space-x-2 mt-4">
           <button 
             @click="showDeleteConfirm = false" 
@@ -180,7 +180,7 @@ export default {
   methods: {
     fetchBooks() {
       this.loading = true;
-      fetch('/books')
+      fetch('/books/api')
         .then(response => response.json())
         .then(data => {
           this.books = data;
@@ -192,7 +192,7 @@ export default {
         });
     },
     fetchAuthors() {
-      fetch('/authors')
+      fetch('/authors/api')
         .then(response => response.json())
         .then(data => {
           this.authors = data;
@@ -213,13 +213,13 @@ export default {
     saveBook() {
       this.saving = true;
       this.errors = {};
-      
+
       const url = this.editingBook 
         ? `/books/${this.editingBook.id}` 
         : '/books';
-      
+
       const method = this.editingBook ? 'PUT' : 'POST';
-      
+
       fetch(url, {
         method: method,
         headers: {
@@ -257,9 +257,9 @@ export default {
     },
     deleteBook() {
       if (!this.bookToDelete) return;
-      
+
       this.deleting = true;
-      
+
       fetch(`/books/${this.bookToDelete.id}`, {
         method: 'DELETE',
         headers: {
@@ -283,7 +283,7 @@ export default {
     },
     toggleBorrowedStatus(book) {
       this.toggling = book.id;
-      
+
       fetch(`/books/${book.id}/toggle-borrowed`, {
         method: 'PATCH',
         headers: {

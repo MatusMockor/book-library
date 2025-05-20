@@ -18,7 +18,10 @@ Route::middleware('auth')->group(function () {
 
     // Author routes
     Route::prefix('authors')->group(function () {
-        Route::get('/', [App\Http\Controllers\AuthorController::class, 'index'])->name('authors.index');
+        Route::get('/', function () {
+            return view('dashboard.authors.index');
+        })->name('authors.index');
+        Route::get('/api', [App\Http\Controllers\AuthorController::class, 'index'])->name('api.authors.index');
         Route::post('/', [App\Http\Controllers\AuthorController::class, 'store'])->name('authors.store');
         Route::get('/{id}', [App\Http\Controllers\AuthorController::class, 'show'])->name('authors.show');
         Route::put('/{id}', [App\Http\Controllers\AuthorController::class, 'update'])->name('authors.update');
@@ -27,7 +30,10 @@ Route::middleware('auth')->group(function () {
 
     // Book routes
     Route::prefix('books')->group(function () {
-        Route::get('/', [App\Http\Controllers\BookController::class, 'index'])->name('books.index');
+        Route::get('/', function () {
+            return view('dashboard.books.index');
+        })->name('books.index');
+        Route::get('/api', [App\Http\Controllers\BookController::class, 'index'])->name('api.books.index');
         Route::post('/', [App\Http\Controllers\BookController::class, 'store'])->name('books.store');
         Route::get('/{id}', [App\Http\Controllers\BookController::class, 'show'])->name('books.show');
         Route::put('/{id}', [App\Http\Controllers\BookController::class, 'update'])->name('books.update');
