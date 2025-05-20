@@ -3,7 +3,7 @@
 <head>
     @include('dashboard.partials.head')
 </head>
-<body>
+<body id="app">
     @include('dashboard.partials.navbar')
 
     <div class="container-fluid">

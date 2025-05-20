@@ -13,11 +13,11 @@
     <div v-if="loading" class="text-center py-4">
       <p>Loading authors...</p>
     </div>
-    
+
     <div v-else-if="authors.length === 0" class="text-center py-4">
       <p>No authors found. Add your first author!</p>
     </div>
-    
+
     <div v-else class="overflow-x-auto">
       <table class="min-w-full bg-white">
         <thead>
@@ -56,7 +56,7 @@
     <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h3 class="text-lg font-semibold mb-4">{{ editingAuthor ? 'Edit Author' : 'Add Author' }}</h3>
-        
+
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">First Name</label>
           <input 
@@ -67,7 +67,7 @@
           >
           <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</p>
         </div>
-        
+
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">Last Name</label>
           <input 
@@ -78,7 +78,7 @@
           >
           <p v-if="errors.surname" class="text-red-500 text-sm mt-1">{{ errors.surname[0] }}</p>
         </div>
-        
+
         <div class="flex justify-end space-x-2">
           <button 
             @click="showForm = false" 
@@ -103,7 +103,7 @@
         <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
         <p>Are you sure you want to delete {{ authorToDelete?.name }} {{ authorToDelete?.surname }}?</p>
         <p class="text-red-500 text-sm mt-2">This will also delete all books associated with this author.</p>
-        
+
         <div class="flex justify-end space-x-2 mt-4">
           <button 
             @click="showDeleteConfirm = false" 
@@ -149,7 +149,7 @@ export default {
   methods: {
     fetchAuthors() {
       this.loading = true;
-      fetch('/authors')
+      fetch('/authors/api')
         .then(response => response.json())
         .then(data => {
           this.authors = data;
@@ -171,13 +171,13 @@ export default {
     saveAuthor() {
       this.saving = true;
       this.errors = {};
-      
+
       const url = this.editingAuthor 
         ? `/authors/${this.editingAuthor.id}` 
         : '/authors';
-      
+
       const method = this.editingAuthor ? 'PUT' : 'POST';
-      
+
       fetch(url, {
         method: method,
         headers: {
@@ -215,9 +215,9 @@ export default {
     },
     deleteAuthor() {
       if (!this.authorToDelete) return;
-      
+
       this.deleting = true;
-      
+
       fetch(`/authors/${this.authorToDelete.id}`, {
         method: 'DELETE',
         headers: {
