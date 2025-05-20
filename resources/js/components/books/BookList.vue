@@ -134,25 +134,33 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
-        <p>Are you sure you want to delete "{{ bookToDelete?.title }}"?</p>
-
-        <div class="flex justify-end space-x-2 mt-4">
-          <button 
-            @click="showDeleteConfirm = false" 
-            class="px-4 py-2 border rounded hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button 
-            @click="deleteBook" 
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            :disabled="deleting"
-          >
-            {{ deleting ? 'Deleting...' : 'Delete' }}
-          </button>
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete "{{ bookToDelete?.title }}"?</p>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button 
+              type="button"
+              @click="deleteBook" 
+              class="btn btn-danger"
+              :disabled="deleting"
+            >
+              {{ deleting ? 'Deleting...' : 'Delete' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -204,7 +212,6 @@ export default {
       },
       errors: {},
       saving: false,
-      showDeleteConfirm: false,
       bookToDelete: null,
       deleting: false,
       toggling: null
@@ -306,7 +313,18 @@ export default {
     },
     confirmDelete(book) {
       this.bookToDelete = book;
-      this.showDeleteConfirm = true;
+      this.showDeleteModal();
+    },
+    showDeleteModal() {
+      const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+      deleteConfirmModal.show();
+    },
+    hideDeleteModal() {
+      const modalElement = document.getElementById('deleteConfirmModal');
+      const deleteConfirmModal = bootstrap.Modal.getInstance(modalElement);
+      if (deleteConfirmModal) {
+        deleteConfirmModal.hide();
+      }
     },
     deleteBook() {
       if (!this.bookToDelete) return;
@@ -323,7 +341,7 @@ export default {
           if (!response.ok) {
             throw new Error('Failed to delete book');
           }
-          this.showDeleteConfirm = false;
+          this.hideDeleteModal();
           this.fetchBooks();
         })
         .catch(error => {
