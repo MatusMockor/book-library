@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\Author;
+use App\Models\Book;
+use App\Policies\AuthorPolicy;
+use App\Policies\BookPolicy;
 use App\Repositories\AuthorRepository;
 use App\Repositories\BookRepository;
 use App\Repositories\Interfaces\AuthorRepository as AuthorRepositoryContract;
 use App\Repositories\Interfaces\BookRepository as BookRepositoryContract;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(Author::class, AuthorPolicy::class);
+        Gate::policy(Book::class, BookPolicy::class);
     }
 }
