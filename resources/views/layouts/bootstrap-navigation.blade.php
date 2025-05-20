@@ -18,11 +18,6 @@
                         {{ __('Dashboard') }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('authors.dashboard') ? 'active' : '' }}" href="{{ route('authors.dashboard') }}">
-                        {{ __('Authors Dashboard') }}
-                    </a>
-                </li>
             </ul>
             
             <!-- Settings Dropdown -->
