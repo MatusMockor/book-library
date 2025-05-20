@@ -126,6 +126,28 @@
 
 <script>
 export default {
+  props: {
+    indexUrl: {
+      type: String,
+      required: true
+    },
+    storeUrl: {
+      type: String,
+      required: true
+    },
+    showUrl: {
+      type: String,
+      required: true
+    },
+    updateUrl: {
+      type: String,
+      required: true
+    },
+    deleteUrl: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       authors: [],
@@ -149,7 +171,7 @@ export default {
   methods: {
     fetchAuthors() {
       this.loading = true;
-      fetch('/authors/api')
+      fetch(this.indexUrl)
         .then(response => response.json())
         .then(data => {
           this.authors = data;
@@ -173,8 +195,8 @@ export default {
       this.errors = {};
 
       const url = this.editingAuthor 
-        ? `/authors/${this.editingAuthor.id}` 
-        : '/authors';
+        ? this.updateUrl.replace('__id__', this.editingAuthor.id) 
+        : this.storeUrl;
 
       const method = this.editingAuthor ? 'PUT' : 'POST';
 
@@ -218,7 +240,7 @@ export default {
 
       this.deleting = true;
 
-      fetch(`/authors/${this.authorToDelete.id}`, {
+      fetch(this.deleteUrl.replace('__id__', this.authorToDelete.id), {
         method: 'DELETE',
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

@@ -153,6 +153,36 @@
 
 <script>
 export default {
+  props: {
+    indexUrl: {
+      type: String,
+      required: true
+    },
+    storeUrl: {
+      type: String,
+      required: true
+    },
+    showUrl: {
+      type: String,
+      required: true
+    },
+    updateUrl: {
+      type: String,
+      required: true
+    },
+    deleteUrl: {
+      type: String,
+      required: true
+    },
+    toggleBorrowedUrl: {
+      type: String,
+      required: true
+    },
+    authorsUrl: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       books: [],
@@ -180,7 +210,7 @@ export default {
   methods: {
     fetchBooks() {
       this.loading = true;
-      fetch('/books/api')
+      fetch(this.indexUrl)
         .then(response => response.json())
         .then(data => {
           this.books = data;
@@ -192,7 +222,7 @@ export default {
         });
     },
     fetchAuthors() {
-      fetch('/authors/api')
+      fetch(this.authorsUrl)
         .then(response => response.json())
         .then(data => {
           this.authors = data;
@@ -215,8 +245,8 @@ export default {
       this.errors = {};
 
       const url = this.editingBook 
-        ? `/books/${this.editingBook.id}` 
-        : '/books';
+        ? this.updateUrl.replace('__id__', this.editingBook.id) 
+        : this.storeUrl;
 
       const method = this.editingBook ? 'PUT' : 'POST';
 
@@ -260,7 +290,7 @@ export default {
 
       this.deleting = true;
 
-      fetch(`/books/${this.bookToDelete.id}`, {
+      fetch(this.deleteUrl.replace('__id__', this.bookToDelete.id), {
         method: 'DELETE',
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -284,7 +314,7 @@ export default {
     toggleBorrowedStatus(book) {
       this.toggling = book.id;
 
-      fetch(`/books/${book.id}/toggle-borrowed`, {
+      fetch(this.toggleBorrowedUrl.replace('__id__', book.id), {
         method: 'PATCH',
         headers: {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
