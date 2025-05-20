@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold">Books</h2>
       <button 
-        @click="showForm = true; editingBook = null" 
+        @click="addNewBook" 
         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         Add Book
@@ -67,60 +67,68 @@
     </div>
 
     <!-- Book Form Modal -->
-    <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-semibold mb-4">{{ editingBook ? 'Edit Book' : 'Add Book' }}</h3>
+    <div class="modal fade" id="bookFormModal" tabindex="-1" aria-labelledby="bookFormModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bookFormModalLabel">{{ editingBook ? 'Edit Book' : 'Add Book' }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="bookTitle" class="form-label">Title</label>
+              <input 
+                v-model="formData.title" 
+                type="text" 
+                class="form-control"
+                id="bookTitle"
+                placeholder="Enter book title"
+              >
+              <div v-if="errors.title" class="text-danger mt-1">{{ errors.title[0] }}</div>
+            </div>
 
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Title</label>
-          <input 
-            v-model="formData.title" 
-            type="text" 
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter book title"
-          >
-          <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title[0] }}</p>
-        </div>
+            <div class="mb-3">
+              <label for="bookAuthor" class="form-label">Author</label>
+              <select 
+                v-model="formData.author_id" 
+                class="form-select"
+                id="bookAuthor"
+              >
+                <option value="" disabled>Select an author</option>
+                <option v-for="author in authors" :key="author.id" :value="author.id">
+                  {{ author.name }} {{ author.surname }}
+                </option>
+              </select>
+              <div v-if="errors.author_id" class="text-danger mt-1">{{ errors.author_id[0] }}</div>
+            </div>
 
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Author</label>
-          <select 
-            v-model="formData.author_id" 
-            class="w-full px-3 py-2 border rounded"
-          >
-            <option value="" disabled>Select an author</option>
-            <option v-for="author in authors" :key="author.id" :value="author.id">
-              {{ author.name }} {{ author.surname }}
-            </option>
-          </select>
-          <p v-if="errors.author_id" class="text-red-500 text-sm mt-1">{{ errors.author_id[0] }}</p>
-        </div>
-
-        <div class="mb-4">
-          <label class="flex items-center">
-            <input 
-              v-model="formData.is_borrowed" 
-              type="checkbox" 
-              class="mr-2"
+            <div class="mb-3 form-check">
+              <input 
+                v-model="formData.is_borrowed" 
+                type="checkbox" 
+                class="form-check-input"
+                id="bookBorrowed"
+              >
+              <label class="form-check-label" for="bookBorrowed">Is Borrowed</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-bs-dismiss="modal"
             >
-            <span class="text-sm font-medium">Is Borrowed</span>
-          </label>
-        </div>
-
-        <div class="flex justify-end space-x-2">
-          <button 
-            @click="showForm = false" 
-            class="px-4 py-2 border rounded hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button 
-            @click="saveBook" 
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            :disabled="saving"
-          >
-            {{ saving ? 'Saving...' : 'Save' }}
-          </button>
+              Cancel
+            </button>
+            <button 
+              type="button"
+              @click="saveBook" 
+              class="btn btn-primary"
+              :disabled="saving"
+            >
+              {{ saving ? 'Saving...' : 'Save' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -188,7 +196,6 @@ export default {
       books: [],
       authors: [],
       loading: true,
-      showForm: false,
       editingBook: null,
       formData: {
         title: '',
@@ -231,6 +238,11 @@ export default {
           console.error('Error fetching authors:', error);
         });
     },
+    addNewBook() {
+      this.editingBook = null;
+      this.resetForm();
+      this.showBookModal();
+    },
     editBook(book) {
       this.editingBook = book;
       this.formData = {
@@ -238,7 +250,18 @@ export default {
         author_id: book.author_id,
         is_borrowed: book.is_borrowed
       };
-      this.showForm = true;
+      this.showBookModal();
+    },
+    showBookModal() {
+      const bookFormModal = new bootstrap.Modal(document.getElementById('bookFormModal'));
+      bookFormModal.show();
+    },
+    hideBookModal() {
+      const modalElement = document.getElementById('bookFormModal');
+      const bookFormModal = bootstrap.Modal.getInstance(modalElement);
+      if (bookFormModal) {
+        bookFormModal.hide();
+      }
     },
     saveBook() {
       this.saving = true;
@@ -270,7 +293,7 @@ export default {
           return response.json();
         })
         .then(data => {
-          this.showForm = false;
+          this.hideBookModal();
           this.fetchBooks();
           this.resetForm();
         })
