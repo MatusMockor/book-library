@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Models\Book;
 use App\Repositories\Interfaces\BookRepository;
 use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
-    public function __construct(protected BookRepository $bookRepository) {}
+    public function __construct(protected BookRepository $bookRepository)
+    {
+        $this->authorizeResource(Book::class);
+    }
 
     public function index(): JsonResponse
     {
