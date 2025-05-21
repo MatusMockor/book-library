@@ -28,15 +28,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\AuthorController::class, 'destroy'])->name('authors.destroy');
     });
 
-    // Book routes
-    Route::prefix('books')->group(function () {
-        Route::get('/', [App\Http\Controllers\BookController::class, 'index'])->name('api.books.index');
-        Route::post('/', [App\Http\Controllers\BookController::class, 'store'])->name('books.store');
-        Route::get('/{id}', [App\Http\Controllers\BookController::class, 'show'])->name('books.show');
-        Route::put('/{id}', [App\Http\Controllers\BookController::class, 'update'])->name('books.update');
-        Route::delete('/{id}', [App\Http\Controllers\BookController::class, 'destroy'])->name('books.destroy');
-        Route::patch('/{id}/toggle-borrowed', [App\Http\Controllers\BookController::class, 'toggleBorrowedStatus'])->name('books.toggle-borrowed');
-    });
+    // Book routes - web interface
+    Route::get('/books', static function () {
+        return view('dashboard.books.index');
+    })->name('books.index');
 });
 
 require __DIR__.'/auth.php';
