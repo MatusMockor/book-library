@@ -28,6 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Generate API token for the authenticated user
+        $user = Auth::user();
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        // Store the token in the session so it can be accessed in the view
+        session()->flash('api_token', $token);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -36,12 +43,18 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Revoke all tokens for the authenticated user
+        if ($user = Auth::user()) {
+            $user->tokens()->delete();
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Add a script to remove the API token from localStorage
+        return redirect('/')->with('remove_token', true);
     }
 }
