@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('api.books.index') }}">
+                <a class="nav-link" href="{{ route('books.index') }}">
                     <i class="bi bi-book"></i> Books
                 </a>
             </li>
