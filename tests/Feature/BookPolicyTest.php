@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Author;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,7 +15,7 @@ class BookPolicyTest extends TestCase
     public function test_admin_can_create_book(): void
     {
         $admin = User::factory()->admin()->create();
-        $author = \App\Models\Author::factory()->create();
+        $author = Author::factory()->create();
 
         $response = $this
             ->actingAs($admin)
@@ -61,7 +62,7 @@ class BookPolicyTest extends TestCase
     public function test_regular_user_cannot_create_book(): void
     {
         $user = User::factory()->create(['is_admin' => false]);
-        $author = \App\Models\Author::factory()->create();
+        $author = Author::factory()->create();
 
         $response = $this
             ->actingAs($user)
