@@ -36,17 +36,18 @@
             <td class="py-2 px-4 border-b text-center">
               <span 
                 :class="book.is_borrowed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'" 
-                class="px-2 py-1 rounded-full text-xs font-medium"
+                class="px-2 py-1 text-xs font-medium border-0"
               >
                 {{ book.is_borrowed ? 'Borrowed' : 'Available' }}
               </span>
-              <div v-if="book.is_borrowed && book.borrower" class="text-xs mt-1">
+              <div v-if="book.is_borrowed && book.borrower" class="text-xs mt-1 mb-2">
                 Borrowed by: {{ book.borrower.name }}
               </div>
               <button 
-                v-if="!book.is_borrowed || isAdmin || (book.borrower && book.borrower.id === userId)"
+                v-if="!book.is_borrowed || isAdmin || (book.is_borrowed && book.borrower && book.borrower.id === userId)"
                 @click="toggleBorrowedStatus(book)" 
-                class="ml-2 px-2 py-1 text-xs rounded bg-gray-200 hover:bg-gray-300"
+                class="mt-1 px-2 py-1 text-xs border-0 rounded-0"
+                :class="book.is_borrowed ? 'bg-info text-white' : 'bg-primary text-white'"
                 :disabled="toggling === book.id"
               >
                 {{ toggling === book.id ? '...' : (book.is_borrowed ? 'Return' : 'Borrow') }}
