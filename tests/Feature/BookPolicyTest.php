@@ -129,9 +129,9 @@ class BookPolicyTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('books', [
-            'id' => $book->id, 
+            'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $user->id
+            'borrowed_by' => $user->id,
         ]);
     }
 
@@ -146,9 +146,9 @@ class BookPolicyTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('books', [
-            'id' => $book->id, 
+            'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 
@@ -164,9 +164,9 @@ class BookPolicyTest extends TestCase
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('books', [
-            'id' => $book->id, 
+            'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $borrower->id
+            'borrowed_by' => $borrower->id,
         ]);
     }
 
@@ -182,9 +182,9 @@ class BookPolicyTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('books', [
-            'id' => $book->id, 
+            'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 }

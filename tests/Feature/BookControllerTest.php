@@ -36,7 +36,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $user->id
+            'borrowed_by' => $user->id,
         ]);
     }
 
@@ -54,7 +54,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 
@@ -72,7 +72,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $borrower->id
+            'borrowed_by' => $borrower->id,
         ]);
     }
 
@@ -91,7 +91,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 
@@ -107,7 +107,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $user->id
+            'borrowed_by' => $user->id,
         ]);
 
         // Return the book
@@ -117,7 +117,7 @@ class BookControllerTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 }

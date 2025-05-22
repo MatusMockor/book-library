@@ -17,7 +17,7 @@ class BookRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bookRepository = new BookRepository();
+        $this->bookRepository = new BookRepository;
     }
 
     public function test_all_returns_all_books_with_author_and_borrower(): void
@@ -54,7 +54,7 @@ class BookRepositoryTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => true,
-            'borrowed_by' => $user->id
+            'borrowed_by' => $user->id,
         ]);
     }
 
@@ -70,7 +70,7 @@ class BookRepositoryTest extends TestCase
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
             'is_borrowed' => false,
-            'borrowed_by' => null
+            'borrowed_by' => null,
         ]);
     }
 
@@ -88,7 +88,7 @@ class BookRepositoryTest extends TestCase
         $data = [
             'title' => 'Test Book',
             'author_id' => $author->id,
-            'is_borrowed' => false
+            'is_borrowed' => false,
         ];
 
         $result = $this->bookRepository->create($data);
@@ -99,7 +99,7 @@ class BookRepositoryTest extends TestCase
         $this->assertDatabaseHas('books', [
             'title' => 'Test Book',
             'author_id' => $author->id,
-            'is_borrowed' => false
+            'is_borrowed' => false,
         ]);
     }
 
@@ -109,7 +109,7 @@ class BookRepositoryTest extends TestCase
         $data = [
             'title' => 'Updated Title',
             'author_id' => $book->author_id,
-            'is_borrowed' => $book->is_borrowed
+            'is_borrowed' => $book->is_borrowed,
         ];
 
         $result = $this->bookRepository->update($book->id, $data);
@@ -117,7 +117,7 @@ class BookRepositoryTest extends TestCase
         $this->assertEquals('Updated Title', $result->title);
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
-            'title' => 'Updated Title'
+            'title' => 'Updated Title',
         ]);
     }
 
@@ -126,7 +126,7 @@ class BookRepositoryTest extends TestCase
         $data = [
             'title' => 'Updated Title',
             'author_id' => 1,
-            'is_borrowed' => false
+            'is_borrowed' => false,
         ];
 
         $result = $this->bookRepository->update(999, $data);
