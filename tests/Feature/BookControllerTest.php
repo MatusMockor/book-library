@@ -29,7 +29,7 @@ class BookControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->patch(route('books.toggle-borrowed', $book));
+            ->patch(route('api.books.toggle-borrowed', $book));
 
         $response->assertStatus(200);
         $response->assertJson(['is_borrowed' => true]);
@@ -47,7 +47,7 @@ class BookControllerTest extends TestCase
 
         $response = $this
             ->actingAs($borrower)
-            ->patch(route('books.toggle-borrowed', $book));
+            ->patch(route('api.books.toggle-borrowed', $book));
 
         $response->assertStatus(200);
         $response->assertJson(['is_borrowed' => false]);
@@ -66,7 +66,7 @@ class BookControllerTest extends TestCase
 
         $response = $this
             ->actingAs($otherUser)
-            ->patch(route('books.toggle-borrowed', $book));
+            ->patch(route('api.books.toggle-borrowed', $book));
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('books', [
@@ -84,7 +84,7 @@ class BookControllerTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->patch(route('books.toggle-borrowed', $book));
+            ->patch(route('api.books.toggle-borrowed', $book));
 
         $response->assertStatus(200);
         $response->assertJson(['is_borrowed' => false]);
@@ -102,7 +102,7 @@ class BookControllerTest extends TestCase
 
         // Borrow the book
         $this->actingAs($user)
-            ->patch(route('books.toggle-borrowed', $book));
+            ->patch(route('api.books.toggle-borrowed', $book));
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
@@ -112,7 +112,7 @@ class BookControllerTest extends TestCase
 
         // Return the book
         $this->actingAs($user)
-            ->patch(route('books.toggle-borrowed', $book->fresh()));
+            ->patch(route('api.books.toggle-borrowed', $book->fresh()));
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,

@@ -41,7 +41,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->post(route('authors.store'), [
+            ->post(route('api.authors.store'), [
                 'name' => 'John',
                 'surname' => 'Doe',
             ]);
@@ -60,7 +60,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->get(route('authors.show', $author));
+            ->get(route('api.authors.show', $author));
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -81,7 +81,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->put(route('authors.update', $author), [
+            ->patch(route('api.authors.update', $author), [
                 'name' => 'Updated',
                 'surname' => 'Author',
             ]);
@@ -101,7 +101,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->delete(route('authors.destroy', $author));
+            ->delete(route('api.authors.destroy', $author));
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('authors', ['id' => $author->id]);
@@ -113,7 +113,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('authors.store'), [
+            ->post(route('api.authors.store'), [
                 'name' => 'John',
                 'surname' => 'Doe',
             ]);
@@ -132,7 +132,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->put(route('authors.update', $author), [
+            ->patch(route('api.authors.update', $author), [
                 'name' => 'Updated',
                 'surname' => 'Author',
             ]);
@@ -152,7 +152,7 @@ class AuthorControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('authors.destroy', $author));
+            ->delete(route('api.authors.destroy', $author));
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('authors', ['id' => $author->id]);
@@ -175,7 +175,7 @@ class AuthorControllerTest extends TestCase
         $author = Author::factory()->create();
 
         // Make the request as a guest (not logged in)
-        $response = $this->get(route('authors.show', $author));
+        $response = $this->get(route('api.authors.show', $author));
 
         // Assert response is successful (200) - this is the actual behavior
         $response->assertStatus(200);
