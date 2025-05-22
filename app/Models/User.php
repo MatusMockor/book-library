@@ -49,6 +49,9 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Get the books borrowed by the user.
+     */
     public function borrowedBooks(): HasMany
     {
         return $this->hasMany(Book::class, 'borrowed_by');
