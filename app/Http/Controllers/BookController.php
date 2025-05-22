@@ -50,7 +50,10 @@ class BookController extends Controller
 
     public function toggleBorrowedStatus(Book $book): JsonResponse
     {
-        $updatedBook = $this->bookRepository->toggleBorrowedStatus($book->id);
+        $this->authorize('toggleBorrowedStatus', $book);
+
+        $userId = auth()->id();
+        $updatedBook = $this->bookRepository->toggleBorrowedStatus($book->id, $userId);
 
         return response()->json($updatedBook);
     }

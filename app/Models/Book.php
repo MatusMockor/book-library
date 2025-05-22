@@ -14,6 +14,7 @@ class Book extends Model
         'author_id',
         'title',
         'is_borrowed',
+        'borrowed_by',
     ];
 
     protected $casts = [
@@ -23,5 +24,10 @@ class Book extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
+    }
+
+    public function borrower(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'borrowed_by');
     }
 }

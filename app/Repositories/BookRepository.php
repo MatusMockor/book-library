@@ -13,7 +13,7 @@ class BookRepository implements BookRepositoryInterface
      */
     public function all(): Collection
     {
-        return Book::with('author')->get();
+        return Book::with(['author', 'borrower'])->get();
     }
 
     /**
@@ -21,7 +21,7 @@ class BookRepository implements BookRepositoryInterface
      */
     public function find(int $id): ?Book
     {
-        return Book::with('author')->find($id);
+        return Book::with(['author', 'borrower'])->find($id);
     }
 
     /**
@@ -65,7 +65,7 @@ class BookRepository implements BookRepositoryInterface
     /**
      * Toggle the borrowed status of a book
      */
-    public function toggleBorrowedStatus(int $id): ?Book
+    public function toggleBorrowedStatus(int $id, ?int $userId = null): ?Book
     {
         $book = $this->find($id);
 
@@ -74,6 +74,15 @@ class BookRepository implements BookRepositoryInterface
         }
 
         $book->is_borrowed = ! $book->is_borrowed;
+
+        if ($book->is_borrowed) {
+            // Book is being borrowed
+            $book->borrowed_by = $userId;
+        } else {
+            // Book is being returned
+            $book->borrowed_by = null;
+        }
+
         $book->save();
 
         return $book;

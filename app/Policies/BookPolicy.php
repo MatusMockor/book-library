@@ -54,8 +54,14 @@ class BookPolicy
         return $user->is_admin;
     }
 
-    public function toggleBorrowedStatus(): bool
+    public function toggleBorrowedStatus(User $user, $book): bool
     {
-        return true; // Any authenticated user can borrow books
+        // If the book is not borrowed, any authenticated user can borrow it
+        if (! $book->is_borrowed) {
+            return true;
+        }
+
+        // If the book is borrowed, only the borrower or an admin can return it
+        return $user->is_admin || (int) $book->borrowed_by === $user->id;
     }
 }

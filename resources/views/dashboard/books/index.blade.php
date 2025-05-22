@@ -13,6 +13,7 @@
         :toggle-borrowed-url="'{{ route('books.toggle-borrowed', ['book' => '__id__']) }}'"
         :authors-url="'{{ route('api.authors.index') }}'"
         :is-admin="{{ auth()->user()->is_admin ? 'true' : 'false' }}"
+        :user-id="{{ auth()->id() }}"
     ></book-list>
 </div>
 @endsection
