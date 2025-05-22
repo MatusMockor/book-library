@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Models\Author;
 use App\Repositories\Interfaces\AuthorRepository;
 use Illuminate\Http\JsonResponse;
 
@@ -14,6 +15,7 @@ class AuthorController extends Controller
     public function __construct(AuthorRepository $authorRepository)
     {
         $this->authorRepository = $authorRepository;
+        $this->authorizeResource(Author::class);
     }
 
     public function index(): JsonResponse
