@@ -12,6 +12,7 @@
         :delete-url="'{{ route('books.destroy', ['id' => '__id__']) }}'"
         :toggle-borrowed-url="'{{ route('books.toggle-borrowed', ['id' => '__id__']) }}'"
         :authors-url="'{{ route('api.authors.index') }}'"
+        :is-admin="{{ auth()->user()->is_admin ? 'true' : 'false' }}"
     ></book-list>
 </div>
 @endsection

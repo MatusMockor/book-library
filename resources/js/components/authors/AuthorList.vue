@@ -3,6 +3,7 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold">Authors</h2>
       <button 
+        v-if="isAdmin"
         @click="showForm = true; editingAuthor = null" 
         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
@@ -35,12 +36,14 @@
             <td class="py-2 px-4 border-b text-center">{{ author.book_count }}</td>
             <td class="py-2 px-4 border-b text-center">
               <button 
+                v-if="isAdmin"
                 @click="editAuthor(author)" 
                 class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
               >
                 Edit
               </button>
               <button 
+                v-if="isAdmin"
                 @click="confirmDelete(author)" 
                 class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               >
@@ -146,6 +149,10 @@ export default {
     deleteUrl: {
       type: String,
       required: true
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
