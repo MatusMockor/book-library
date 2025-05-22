@@ -53,18 +53,11 @@ class BookRepository implements BookRepositoryInterface
     public function toggleBookBorrowedStatus(Book $book, ?int $userId = null): Book
     {
         $book->is_borrowed = ! $book->is_borrowed;
-
-        if ($book->is_borrowed) {
-            // Book is being borrowed
-            $book->borrowed_by = $userId;
-        } else {
-            // Book is being returned
-            $book->borrowed_by = null;
-        }
-
+        $book->borrowed_by = $book->is_borrowed ? $userId : null;
         $book->save();
 
         return $book;
+
     }
 
     /**
