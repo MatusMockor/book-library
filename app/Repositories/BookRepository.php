@@ -33,46 +33,25 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
-     * Update an existing book
+     * Update an existing book using Book model
      */
-    public function update(int $id, array $data): ?Book
+    public function update(Book $book, array $data): Book
     {
-        $book = $this->find($id);
-
-        if (! $book) {
-            return null;
-        }
-
         $book->update($data);
 
         return $book;
     }
 
     /**
-     * Delete a book
+     * Delete a book using Book model
      */
-    public function delete(int $id): bool
+    public function delete(Book $book): bool
     {
-        $book = $this->find($id);
-
-        if (! $book) {
-            return false;
-        }
-
         return $book->delete();
     }
 
-    /**
-     * Toggle the borrowed status of a book
-     */
-    public function toggleBorrowedStatus(int $id, ?int $userId = null): ?Book
+    public function toggleBookBorrowedStatus(Book $book, ?int $userId = null): Book
     {
-        $book = $this->find($id);
-
-        if (! $book) {
-            return null;
-        }
-
         $book->is_borrowed = ! $book->is_borrowed;
 
         if ($book->is_borrowed) {
