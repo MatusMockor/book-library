@@ -26,7 +26,7 @@
             <th class="py-2 px-4 border-b text-left">Name</th>
             <th class="py-2 px-4 border-b text-left">Surname</th>
             <th class="py-2 px-4 border-b text-center">Books Count</th>
-            <th class="py-2 px-4 border-b text-center">Actions</th>
+            <th v-if="isAdmin" class="py-2 px-4 border-b text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
