@@ -10,11 +10,8 @@ use Illuminate\Http\JsonResponse;
 
 class AuthorController extends Controller
 {
-    protected $authorRepository;
-
-    public function __construct(AuthorRepository $authorRepository)
+    public function __construct(protected AuthorRepository $authorRepository)
     {
-        $this->authorRepository = $authorRepository;
         $this->authorizeResource(Author::class);
     }
 
