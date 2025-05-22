@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Book;
 use App\Models\User;
 
 class BookPolicy
