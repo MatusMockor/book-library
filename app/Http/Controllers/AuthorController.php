@@ -43,14 +43,14 @@ class AuthorController extends Controller
 
     public function update(UpdateAuthorRequest $request, Author $author): JsonResponse
     {
-        $updatedAuthor = $this->authorRepository->update($author->id, $request->validated());
+        $updatedAuthor = $this->authorRepository->update($author, $request->validated());
 
         return response()->json($updatedAuthor);
     }
 
     public function destroy(Author $author): JsonResponse
     {
-        $this->authorRepository->delete($author->id);
+        $this->authorRepository->delete($author);
 
         return response()->json(['message' => 'Author deleted successfully']);
     }
