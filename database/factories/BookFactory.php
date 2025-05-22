@@ -21,6 +21,18 @@ class BookFactory extends Factory
             'title' => fake()->sentence(4),
             'author_id' => Author::factory(),
             'is_borrowed' => fake()->boolean(20), // 20% chance of being borrowed
+            'borrowed_by' => null,
         ];
+    }
+
+    /**
+     * Indicate that the book is borrowed by a specific user.
+     */
+    public function borrowedBy($userId): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_borrowed' => true,
+            'borrowed_by' => $userId,
+        ]);
     }
 }
