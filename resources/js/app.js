@@ -2,6 +2,9 @@ import './bootstrap';
 import { createApp } from 'vue';
 import AuthorList from './components/authors/AuthorList.vue';
 import BookList from './components/books/BookList.vue';
+import * as bootstrap from 'bootstrap';
+
+window.bootstrap = bootstrap;
 
 // Initialize Vue
 const app = createApp({});
