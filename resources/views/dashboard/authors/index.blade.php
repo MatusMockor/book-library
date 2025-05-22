@@ -10,6 +10,7 @@
         :show-url="'{{ route('authors.show', ['id' => '__id__']) }}'"
         :update-url="'{{ route('authors.update', ['id' => '__id__']) }}'"
         :delete-url="'{{ route('authors.destroy', ['id' => '__id__']) }}'"
+        :is-admin="{{ auth()->user()->is_admin ? 'true' : 'false' }}"
     ></author-list>
 </div>
 @endsection

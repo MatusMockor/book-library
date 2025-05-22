@@ -3,6 +3,7 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold">Books</h2>
       <button 
+        v-if="isAdmin"
         @click="addNewBook" 
         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
@@ -40,6 +41,7 @@
                 {{ book.is_borrowed ? 'Borrowed' : 'Available' }}
               </span>
               <button 
+                v-if="isAdmin"
                 @click="toggleBorrowedStatus(book)" 
                 class="ml-2 px-2 py-1 text-xs rounded bg-gray-200 hover:bg-gray-300"
                 :disabled="toggling === book.id"
@@ -49,12 +51,14 @@
             </td>
             <td class="py-2 px-4 border-b text-center">
               <button 
+                v-if="isAdmin"
                 @click="editBook(book)" 
                 class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
               >
                 Edit
               </button>
               <button 
+                v-if="isAdmin"
                 @click="confirmDelete(book)" 
                 class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               >
@@ -197,6 +201,10 @@ export default {
     authorsUrl: {
       type: String,
       required: true
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -225,7 +233,17 @@ export default {
     fetchBooks() {
       this.loading = true;
       fetch(this.indexUrl)
-        .then(response => response.json())
+        .then(response => {
+          // Check if the response is JSON by looking at the content-type header
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            return response.json();
+          } else {
+            // If not JSON, just return an empty array
+            console.error('Error fetching books: Server returned a non-JSON response');
+            return [];
+          }
+        })
         .then(data => {
           this.books = data;
           this.loading = false;
@@ -237,7 +255,17 @@ export default {
     },
     fetchAuthors() {
       fetch(this.authorsUrl)
-        .then(response => response.json())
+        .then(response => {
+          // Check if the response is JSON by looking at the content-type header
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            return response.json();
+          } else {
+            // If not JSON, just return an empty array
+            console.error('Error fetching authors: Server returned a non-JSON response');
+            return [];
+          }
+        })
         .then(data => {
           this.authors = data;
         })
@@ -290,12 +318,19 @@ export default {
       })
         .then(response => {
           if (!response.ok) {
-            return response.json().then(data => {
-              if (data.errors) {
-                this.errors = data.errors;
-              }
-              throw new Error('Failed to save book');
-            });
+            // Check if the response is JSON by looking at the content-type header
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+              return response.json().then(data => {
+                if (data.errors) {
+                  this.errors = data.errors;
+                }
+                throw new Error('Failed to save book');
+              });
+            } else {
+              // If not JSON, just throw a generic error
+              throw new Error('Failed to save book: Server returned a non-JSON response');
+            }
           }
           return response.json();
         })
@@ -339,7 +374,16 @@ export default {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Failed to delete book');
+            // Check if the response is JSON by looking at the content-type header
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+              return response.json().then(data => {
+                throw new Error(data.message || 'Failed to delete book');
+              });
+            } else {
+              // If not JSON, just throw a generic error
+              throw new Error('Failed to delete book: Server returned a non-JSON response');
+            }
           }
           this.hideDeleteModal();
           this.fetchBooks();
@@ -363,14 +407,30 @@ export default {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Failed to toggle borrowed status');
+            // Check if the response is JSON by looking at the content-type header
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+              return response.json().then(data => {
+                throw new Error(data.message || 'Failed to toggle borrowed status');
+              });
+            } else {
+              // If not JSON, just throw a generic error
+              throw new Error('Failed to toggle borrowed status: Server returned a non-JSON response');
+            }
           }
-          return response.json();
+          // Check if the response is JSON by looking at the content-type header
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            return response.json();
+          } else {
+            // If not JSON, just return an empty object
+            return {};
+          }
         })
         .then(data => {
           // Update the book in the list
           const index = this.books.findIndex(b => b.id === book.id);
-          if (index !== -1) {
+          if (index !== -1 && data.is_borrowed !== undefined) {
             this.books[index].is_borrowed = data.is_borrowed;
           }
         })
