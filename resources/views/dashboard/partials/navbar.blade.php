@@ -27,7 +27,14 @@
                             <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>
