@@ -74,7 +74,6 @@ class BookRepositoryTest extends TestCase
         ]);
     }
 
-
     public function test_create_returns_created_book(): void
     {
         $author = \App\Models\Author::factory()->create();
@@ -115,7 +114,6 @@ class BookRepositoryTest extends TestCase
         ]);
     }
 
-
     public function test_delete_returns_true_for_existing_book(): void
     {
         $book = Book::factory()->create();
@@ -125,7 +123,6 @@ class BookRepositoryTest extends TestCase
         $this->assertTrue($result);
         $this->assertDatabaseMissing('books', ['id' => $book->id]);
     }
-
 
     public function test_get_by_author_id_returns_books_by_author(): void
     {

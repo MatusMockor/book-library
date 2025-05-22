@@ -35,14 +35,8 @@ class AuthorRepository implements AuthorRepositoryInterface
     /**
      * Update an existing author
      */
-    public function update(int $id, array $data): ?Author
+    public function update(Author $author, array $data): Author
     {
-        $author = $this->find($id);
-
-        if (! $author) {
-            return null;
-        }
-
         $author->update($data);
 
         return $author;
@@ -51,14 +45,8 @@ class AuthorRepository implements AuthorRepositoryInterface
     /**
      * Delete an author
      */
-    public function delete(int $id): bool
+    public function delete(Author $author): bool
     {
-        $author = $this->find($id);
-
-        if (! $author) {
-            return false;
-        }
-
         return $author->delete();
     }
 }
