@@ -4,7 +4,7 @@
       <h2 class="text-xl font-semibold">Authors</h2>
       <button 
         v-if="isAdmin"
-        @click="showForm = true; editingAuthor = null" 
+        @click="addNewAuthor" 
         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         Add Author
@@ -56,71 +56,88 @@
     </div>
 
     <!-- Author Form Modal -->
-    <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-semibold mb-4">{{ editingAuthor ? 'Edit Author' : 'Add Author' }}</h3>
+    <div class="modal fade" id="authorFormModal" tabindex="-1" aria-labelledby="authorFormModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="authorFormModalLabel">{{ editingAuthor ? 'Edit Author' : 'Add Author' }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="authorName" class="form-label">First Name</label>
+              <input 
+                v-model="formData.name" 
+                type="text" 
+                class="form-control"
+                id="authorName"
+                placeholder="Enter first name"
+              >
+              <div v-if="errors.name" class="text-danger mt-1">{{ errors.name[0] }}</div>
+            </div>
 
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">First Name</label>
-          <input 
-            v-model="formData.name" 
-            type="text" 
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter first name"
-          >
-          <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</p>
-        </div>
-
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Last Name</label>
-          <input 
-            v-model="formData.surname" 
-            type="text" 
-            class="w-full px-3 py-2 border rounded"
-            placeholder="Enter last name"
-          >
-          <p v-if="errors.surname" class="text-red-500 text-sm mt-1">{{ errors.surname[0] }}</p>
-        </div>
-
-        <div class="flex justify-end space-x-2">
-          <button 
-            @click="showForm = false" 
-            class="px-4 py-2 border rounded hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button 
-            @click="saveAuthor" 
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            :disabled="saving"
-          >
-            {{ saving ? 'Saving...' : 'Save' }}
-          </button>
+            <div class="mb-3">
+              <label for="authorSurname" class="form-label">Last Name</label>
+              <input 
+                v-model="formData.surname" 
+                type="text" 
+                class="form-control"
+                id="authorSurname"
+                placeholder="Enter last name"
+              >
+              <div v-if="errors.surname" class="text-danger mt-1">{{ errors.surname[0] }}</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button 
+              type="button"
+              @click="saveAuthor" 
+              class="btn btn-primary"
+              :disabled="saving"
+            >
+              {{ saving ? 'Saving...' : 'Save' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
-        <p>Are you sure you want to delete {{ authorToDelete?.name }} {{ authorToDelete?.surname }}?</p>
-        <p class="text-red-500 text-sm mt-2">This will also delete all books associated with this author.</p>
-
-        <div class="flex justify-end space-x-2 mt-4">
-          <button 
-            @click="showDeleteConfirm = false" 
-            class="px-4 py-2 border rounded hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button 
-            @click="deleteAuthor" 
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            :disabled="deleting"
-          >
-            {{ deleting ? 'Deleting...' : 'Delete' }}
-          </button>
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete "{{ authorToDelete?.name }} {{ authorToDelete?.surname }}"?</p>
+            <p class="text-danger mt-2">This will also delete all books associated with this author.</p>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button 
+              type="button"
+              @click="deleteAuthor" 
+              class="btn btn-danger"
+              :disabled="deleting"
+            >
+              {{ deleting ? 'Deleting...' : 'Delete' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -159,7 +176,6 @@ export default {
     return {
       authors: [],
       loading: true,
-      showForm: false,
       editingAuthor: null,
       formData: {
         name: '',
@@ -167,7 +183,6 @@ export default {
       },
       errors: {},
       saving: false,
-      showDeleteConfirm: false,
       authorToDelete: null,
       deleting: false
     }
@@ -189,13 +204,29 @@ export default {
           this.loading = false;
         });
     },
+    addNewAuthor() {
+      this.editingAuthor = null;
+      this.resetForm();
+      this.showAuthorModal();
+    },
     editAuthor(author) {
       this.editingAuthor = author;
       this.formData = {
         name: author.name,
         surname: author.surname
       };
-      this.showForm = true;
+      this.showAuthorModal();
+    },
+    showAuthorModal() {
+      const authorFormModal = new bootstrap.Modal(document.getElementById('authorFormModal'));
+      authorFormModal.show();
+    },
+    hideAuthorModal() {
+      const modalElement = document.getElementById('authorFormModal');
+      const authorFormModal = bootstrap.Modal.getInstance(modalElement);
+      if (authorFormModal) {
+        authorFormModal.hide();
+      }
     },
     saveAuthor() {
       this.saving = true;
@@ -227,7 +258,7 @@ export default {
           return response.json();
         })
         .then(data => {
-          this.showForm = false;
+          this.hideAuthorModal();
           this.fetchAuthors();
           this.resetForm();
         })
@@ -240,7 +271,18 @@ export default {
     },
     confirmDelete(author) {
       this.authorToDelete = author;
-      this.showDeleteConfirm = true;
+      this.showDeleteModal();
+    },
+    showDeleteModal() {
+      const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+      deleteConfirmModal.show();
+    },
+    hideDeleteModal() {
+      const modalElement = document.getElementById('deleteConfirmModal');
+      const deleteConfirmModal = bootstrap.Modal.getInstance(modalElement);
+      if (deleteConfirmModal) {
+        deleteConfirmModal.hide();
+      }
     },
     deleteAuthor() {
       if (!this.authorToDelete) return;
@@ -257,7 +299,7 @@ export default {
           if (!response.ok) {
             throw new Error('Failed to delete author');
           }
-          this.showDeleteConfirm = false;
+          this.hideDeleteModal();
           this.fetchAuthors();
         })
         .catch(error => {
