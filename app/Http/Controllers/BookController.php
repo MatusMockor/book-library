@@ -29,47 +29,29 @@ class BookController extends Controller
         return response()->json($book, 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Book $book): JsonResponse
     {
-        $book = $this->bookRepository->find($id);
-
-        if (! $book) {
-            return response()->json(['message' => 'Book not found'], 404);
-        }
-
         return response()->json($book);
     }
 
-    public function update(UpdateBookRequest $request, int $id): JsonResponse
+    public function update(UpdateBookRequest $request, Book $book): JsonResponse
     {
-        $book = $this->bookRepository->update($id, $request->validated());
+        $updatedBook = $this->bookRepository->update($book->id, $request->validated());
 
-        if (! $book) {
-            return response()->json(['message' => 'Book not found'], 404);
-        }
-
-        return response()->json($book);
+        return response()->json($updatedBook);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Book $book): JsonResponse
     {
-        $result = $this->bookRepository->delete($id);
-
-        if (! $result) {
-            return response()->json(['message' => 'Book not found'], 404);
-        }
+        $this->bookRepository->delete($book->id);
 
         return response()->json(['message' => 'Book deleted successfully']);
     }
 
-    public function toggleBorrowedStatus(int $id): JsonResponse
+    public function toggleBorrowedStatus(Book $book): JsonResponse
     {
-        $book = $this->bookRepository->toggleBorrowedStatus($id);
+        $updatedBook = $this->bookRepository->toggleBorrowedStatus($book->id);
 
-        if (! $book) {
-            return response()->json(['message' => 'Book not found'], 404);
-        }
-
-        return response()->json($book);
+        return response()->json($updatedBook);
     }
 }

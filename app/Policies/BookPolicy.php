@@ -53,12 +53,4 @@ class BookPolicy
     {
         return $user->is_admin;
     }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user): bool
-    {
-        return $user->is_admin;
-    }
 }
