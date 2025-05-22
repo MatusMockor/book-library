@@ -42,12 +42,12 @@ class BookRepositoryTest extends TestCase
         $this->assertTrue($result->relationLoaded('borrower'));
     }
 
-    public function test_toggle_borrowed_status_from_available_to_borrowed(): void
+    public function test_toggle_book_borrowed_status_from_available_to_borrowed(): void
     {
         $user = User::factory()->create();
         $book = Book::factory()->create(['is_borrowed' => false, 'borrowed_by' => null]);
 
-        $result = $this->bookRepository->toggleBorrowedStatus($book->id, $user->id);
+        $result = $this->bookRepository->toggleBookBorrowedStatus($book, $user->id);
 
         $this->assertTrue($result->is_borrowed);
         $this->assertEquals($user->id, $result->borrowed_by);
@@ -58,12 +58,12 @@ class BookRepositoryTest extends TestCase
         ]);
     }
 
-    public function test_toggle_borrowed_status_from_borrowed_to_available(): void
+    public function test_toggle_book_borrowed_status_from_borrowed_to_available(): void
     {
         $user = User::factory()->create();
         $book = Book::factory()->borrowedBy($user->id)->create();
 
-        $result = $this->bookRepository->toggleBorrowedStatus($book->id, $user->id);
+        $result = $this->bookRepository->toggleBookBorrowedStatus($book, $user->id);
 
         $this->assertFalse($result->is_borrowed);
         $this->assertNull($result->borrowed_by);
@@ -74,13 +74,6 @@ class BookRepositoryTest extends TestCase
         ]);
     }
 
-    public function test_toggle_borrowed_status_returns_null_for_nonexistent_book(): void
-    {
-        $user = User::factory()->create();
-        $result = $this->bookRepository->toggleBorrowedStatus(999, $user->id);
-
-        $this->assertNull($result);
-    }
 
     public function test_create_returns_created_book(): void
     {
@@ -103,53 +96,36 @@ class BookRepositoryTest extends TestCase
         ]);
     }
 
-    public function test_update_returns_updated_book(): void
+    public function test_update_book_returns_updated_book(): void
     {
-        $book = Book::factory()->create(['title' => 'Original Title']);
+        $book = Book::factory()->create();
+        $title = fake()->title;
         $data = [
-            'title' => 'Updated Title',
+            'title' => $title,
             'author_id' => $book->author_id,
             'is_borrowed' => $book->is_borrowed,
         ];
 
-        $result = $this->bookRepository->update($book->id, $data);
+        $result = $this->bookRepository->update($book, $data);
 
-        $this->assertEquals('Updated Title', $result->title);
+        $this->assertEquals($title, $result->title);
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
-            'title' => 'Updated Title',
+            'title' => $title,
         ]);
     }
 
-    public function test_update_returns_null_for_nonexistent_book(): void
-    {
-        $data = [
-            'title' => 'Updated Title',
-            'author_id' => 1,
-            'is_borrowed' => false,
-        ];
-
-        $result = $this->bookRepository->update(999, $data);
-
-        $this->assertNull($result);
-    }
 
     public function test_delete_returns_true_for_existing_book(): void
     {
         $book = Book::factory()->create();
 
-        $result = $this->bookRepository->delete($book->id);
+        $result = $this->bookRepository->delete($book);
 
         $this->assertTrue($result);
         $this->assertDatabaseMissing('books', ['id' => $book->id]);
     }
 
-    public function test_delete_returns_false_for_nonexistent_book(): void
-    {
-        $result = $this->bookRepository->delete(999);
-
-        $this->assertFalse($result);
-    }
 
     public function test_get_by_author_id_returns_books_by_author(): void
     {
