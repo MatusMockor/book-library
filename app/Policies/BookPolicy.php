@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Book;
 use App\Models\User;
 
 class BookPolicy
@@ -52,5 +53,10 @@ class BookPolicy
     public function restore(User $user): bool
     {
         return $user->is_admin;
+    }
+
+    public function toggleBorrowedStatus(): bool
+    {
+        return true; // Any authenticated user can borrow books
     }
 }
