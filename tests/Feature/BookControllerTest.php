@@ -14,7 +14,7 @@ class BookControllerTest extends TestCase
     public function test_index_returns_all_books(): void
     {
         $user = User::factory()->create();
-        $books = Book::factory()->count(3)->create();
+        Book::factory()->count(3)->create();
 
         $response = $this->actingAs($user)->get(route('api.books.index'));
 
