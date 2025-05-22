@@ -18,7 +18,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->post('/api/books', [
+            ->post(route('books.store'), [
                 'title' => 'Test Book',
                 'author_id' => $author->id,
                 'is_borrowed' => false,
@@ -35,7 +35,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->put('/api/books/'.$book->id, [
+            ->put(route('books.update', $book), [
                 'title' => 'Updated Title',
                 'author_id' => $book->author_id,
                 'is_borrowed' => $book->is_borrowed,
@@ -52,7 +52,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->delete('/api/books/'.$book->id);
+            ->delete(route('books.destroy', $book));
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('books', ['id' => $book->id]);
@@ -65,7 +65,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post('/api/books', [
+            ->post(route('books.store'), [
                 'title' => 'Test Book',
                 'author_id' => $author->id,
                 'is_borrowed' => false,
@@ -82,7 +82,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->put('/api/books/'.$book->id, [
+            ->put(route('books.update', $book), [
                 'title' => 'Updated Title',
                 'author_id' => $book->author_id,
                 'is_borrowed' => $book->is_borrowed,
@@ -99,7 +99,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete('/api/books/'.$book->id);
+            ->delete(route('books.destroy', $book));
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('books', ['id' => $book->id]);
@@ -112,7 +112,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($admin)
-            ->patch('/api/books/'.$book->id.'/toggle-borrowed');
+            ->patch(route('books.toggle-borrowed', $book));
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('books', ['id' => $book->id, 'is_borrowed' => true]);
@@ -125,7 +125,7 @@ class BookPolicyTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->patch('/api/books/'.$book->id.'/toggle-borrowed');
+            ->patch(route('books.toggle-borrowed', $book));
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('books', ['id' => $book->id, 'is_borrowed' => true]);
