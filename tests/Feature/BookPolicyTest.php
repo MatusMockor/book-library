@@ -134,5 +134,4 @@ class BookPolicyTest extends TestCase
             'borrowed_by' => $user->id,
         ]);
     }
-
 }
