@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +22,7 @@ Route::prefix('/books')->group(function () {
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index'])->name('api.authors.index');
     Route::post('/', [AuthorController::class, 'store'])->name('authors.store');
-    Route::get('/{id}', [AuthorController::class, 'show'])->name('authors.show');
-    Route::put('/{id}', [AuthorController::class, 'update'])->name('authors.update');
-    Route::delete('/{id}', [AuthorController::class, 'destroy'])->name('authors.destroy');
+    Route::get('/{author}', [AuthorController::class, 'show'])->name('authors.show');
+    Route::put('/{author}', [AuthorController::class, 'update'])->name('authors.update');
+    Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('authors.destroy');
 })->middleware('auth:sanctum');

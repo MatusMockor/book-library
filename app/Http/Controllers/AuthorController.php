@@ -34,37 +34,23 @@ class AuthorController extends Controller
         return response()->json($author, 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Author $author): JsonResponse
     {
-        $author = $this->authorRepository->find($id);
-
-        if (! $author) {
-            return response()->json(['message' => 'Author not found'], 404);
-        }
-
         $author->book_count = $author->books->count();
 
         return response()->json($author);
     }
 
-    public function update(UpdateAuthorRequest $request, int $id): JsonResponse
+    public function update(UpdateAuthorRequest $request, Author $author): JsonResponse
     {
-        $author = $this->authorRepository->update($id, $request->validated());
+        $updatedAuthor = $this->authorRepository->update($author->id, $request->validated());
 
-        if (! $author) {
-            return response()->json(['message' => 'Author not found'], 404);
-        }
-
-        return response()->json($author);
+        return response()->json($updatedAuthor);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Author $author): JsonResponse
     {
-        $result = $this->authorRepository->delete($id);
-
-        if (! $result) {
-            return response()->json(['message' => 'Author not found'], 404);
-        }
+        $this->authorRepository->delete($author->id);
 
         return response()->json(['message' => 'Author deleted successfully']);
     }
