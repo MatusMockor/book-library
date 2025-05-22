@@ -16,7 +16,7 @@ class BookController extends Controller
         $this->authorizeResource(Book::class);
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
         $books = $this->bookRepository->all();
 
@@ -42,14 +42,14 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, Book $book): BookResource
     {
-        $updatedBook = $this->bookRepository->update($book->id, $request->validated());
+        $updatedBook = $this->bookRepository->update($book, $request->validated());
 
         return new BookResource($updatedBook);
     }
 
     public function destroy(Book $book): JsonResponse
     {
-        $this->bookRepository->delete($book->id);
+        $this->bookRepository->delete($book);
 
         return response()->json(['message' => 'Book deleted successfully']);
     }
@@ -59,7 +59,7 @@ class BookController extends Controller
         $this->authorize('toggleBorrowedStatus', $book);
 
         $userId = auth()->id();
-        $updatedBook = $this->bookRepository->toggleBorrowedStatus($book->id, $userId);
+        $updatedBook = $this->bookRepository->toggleBookBorrowedStatus($book, $userId);
 
         return new BookResource($updatedBook);
     }
