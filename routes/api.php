@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,12 @@ Route::prefix('/books')->group(function () {
     Route::delete('/{book}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::patch('/{book}/toggle-borrowed',
         [BookController::class, 'toggleBorrowedStatus'])->name('books.toggle-borrowed');
+})->middleware('auth:sanctum');
+
+Route::prefix('authors')->group(function () {
+    Route::get('/', [AuthorController::class, 'index'])->name('api.authors.index');
+    Route::post('/', [AuthorController::class, 'store'])->name('authors.store');
+    Route::get('/{id}', [AuthorController::class, 'show'])->name('authors.show');
+    Route::put('/{id}', [AuthorController::class, 'update'])->name('authors.update');
+    Route::delete('/{id}', [AuthorController::class, 'destroy'])->name('authors.destroy');
 })->middleware('auth:sanctum');
