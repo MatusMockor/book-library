@@ -5,7 +5,7 @@
       <button 
         v-if="isAdmin"
         @click="addNewAuthor" 
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        class="px-4 py-2 bg-primary text-white border-0 rounded-0"
       >
         Add Author
       </button>
@@ -38,14 +38,14 @@
               <button 
                 v-if="isAdmin"
                 @click="editAuthor(author)" 
-                class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
+                class="px-3 py-1 bg-info text-white border-0 rounded-0 mr-2"
               >
                 Edit
               </button>
               <button 
                 v-if="isAdmin"
                 @click="confirmDelete(author)" 
-                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                class="px-3 py-1 bg-danger text-white border-0 rounded-0"
               >
                 Delete
               </button>

@@ -1,41 +1,31 @@
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Book Library</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="btn d-md-none me-2" id="sidebarToggle">
+            <i class="bi bi-list fs-5"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-house"></i> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-book"></i> Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-person"></i> Authors</a>
-                </li>
-            </ul>
-            <div class="d-flex">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle"></i> Account
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="bi bi-box-arrow-right"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
+        
+        <a class="navbar-brand d-md-none" href="#">
+            <i class="bi bi-book-half me-2"></i>Book Library
+        </a>
+        
+        <div class="ms-auto d-flex align-items-center">
+            <!-- User profile -->
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="avatar me-2 bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <span class="text-white">{{ substr(Auth::user()->name ?? 'U', 0, 1) }}</span>
+                    </div>
+                    <span class="d-none d-md-inline">{{ Auth::user()->name ?? 'User' }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
