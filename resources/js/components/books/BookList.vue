@@ -26,7 +26,7 @@
             <th class="py-2 px-4 border-b text-left">Title</th>
             <th class="py-2 px-4 border-b text-left">Author</th>
             <th class="py-2 px-4 border-b text-center">Status</th>
-            <th class="py-2 px-4 border-b text-center">Actions</th>
+            <th v-if="isAdmin" class="py-2 px-4 border-b text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,6 @@
                 {{ book.is_borrowed ? 'Borrowed' : 'Available' }}
               </span>
               <button 
-                v-if="isAdmin"
                 @click="toggleBorrowedStatus(book)" 
                 class="ml-2 px-2 py-1 text-xs rounded bg-gray-200 hover:bg-gray-300"
                 :disabled="toggling === book.id"
@@ -49,16 +48,14 @@
                 {{ toggling === book.id ? '...' : 'Toggle' }}
               </button>
             </td>
-            <td class="py-2 px-4 border-b text-center">
+            <td v-if="isAdmin" class="py-2 px-4 border-b text-center">
               <button 
-                v-if="isAdmin"
                 @click="editBook(book)" 
                 class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
               >
                 Edit
               </button>
               <button 
-                v-if="isAdmin"
                 @click="confirmDelete(book)" 
                 class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               >
